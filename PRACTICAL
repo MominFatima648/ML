@@ -1,0 +1,228 @@
+PROBABILITY OF FINING DAYS
+# The probability that it is Friday and that a student is absent is 3%
+pAF=0.03
+print("The probability that it is Friday and that a student is absent :",pAF)
+# The probability that it is Friday is 20%
+pF=0.2
+print("The probability that it is Friday : ",pF)
+# The probability that a student is absent given that today is Friday
+pResult=(pAF/pF)
+# Display the Result
+print("The probability that a student is absent given that today is Friday : ",pResult * 100,"%")
+
+
+KNN:-
+# Import necessary modules
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+import random
+
+# Loading data
+data_iris = load_iris()
+# To get list of target names
+label_target = data_iris.target_names
+print()
+print("Sample Data from Iris Dataset")
+print("*"*30)
+# to display the sample data from the iris dataset
+for i in range(10):
+	rn = random.randint(0,120)
+	print(data_iris.data[rn],"===>",label_target[data_iris.target[rn]])
+
+# Create feature and target arrays
+X = data_iris.data
+y = data_iris.target
+
+# Split into training and test set
+X_train, X_test, y_train, y_test = train_test_split(
+			X, y, test_size = 0.3, random_state=1)
+
+print("The Training dataset length: ",len(X_train))
+print("The Testing dataset length: ",len(X_test))
+try:
+	nn = int(input("Enter number of neighbors :"))
+	knn = KNeighborsClassifier(nn)
+	
+	knn.fit(X_train, y_train)
+	# to display the score
+	print("The Score is :",knn.score(X_test, y_test))
+	# To get test data from the user
+	test_data = input("Enter Test Data :").split(",")
+	for i in range(len(test_data)):
+		test_data[i] = float(test_data[i])
+	print()
+
+	v = knn.predict([test_data])
+	print("Predicted output is :",label_target[v])
+except:
+	print("Please supply valid input......")
+
+
+CLASSIFICATION VAR1 & VAR2:-
+from sklearn.cluster import KMeans
+import numpy as np
+X = np.array([[1.713,1.586], [0.180,1.786], [0.353,1.240],
+[0.940,1.566], [1.486,0.759], [1.266,1.106],[1.540,0.419],[0.459,1.799],[0.773,0.186]])
+y=np.array([0,1,1,0,1,0,1,1,1])
+kmeans = KMeans(n_clusters=3, random_state=0).fit(X,y)
+print("The input data is ")
+print("VAR1 \t VAR2 \t CLASS")
+i=0
+for val in X:
+	print(val[0],"\t",val[1],"\t",y[i])
+	i+=1
+print("="*20)
+# To get test data from the user
+print("The Test data to predict ")
+test_data = []
+VAR1 = float(input("Enter Value for VAR1 :"))
+VAR2 = float(input("Enter Value for VAR2 :"))
+test_data.append(VAR1)
+test_data.append(VAR2)
+print("="*20)
+print("The predicted Class is : ",kmeans.predict([test_data]))
+
+
+HIGH, MED, LOW BANKING RISK:-
+total_Records=10
+numGolfRecords=4
+unConditionalprobGolf=numGolfRecords / total_Records
+print("Unconditional probability of golf: ={}".format(unConditionalprobGolf)) 
+#conditional probability of 'single' given 'medRisk'
+numMedRiskSingle=2
+numMedRisk=3
+probMedRiskSingle=numMedRiskSingle/total_Records
+probMedRisk=numMedRisk/total_Records
+conditionalProb=(probMedRiskSingle/probMedRisk)
+print("Conditional probability of single given medRisk: = {}".format(conditionalProb))
+/
+print(f"Conditional probability of single given medRisk: = {conditionalProb}")
+
+
+LINEAR REGRESSION
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+# To read data from Age_Income.csv file
+dataFrame = pd.read_csv('Age_Income.csv')
+# To place data in to age and income vectors
+age = dataFrame['Age']
+income = dataFrame['Income']
+
+# number of points
+num = np.size(age)
+# To find the mean of age and income vector
+mean_age = np.mean(age)
+mean_income = np.mean(income)
+
+# calculating cross-deviation and deviation about age
+CD_ageincome = np.sum(income*age) - num*mean_income*mean_age
+  CD_ageage = np.sum(age*age) - num*mean_age*mean_age
+
+# calculating regression coefficients
+b1 = CD_ageincome / CD_ageage
+b0 = mean_income - b1*mean_age
+# to display coefficients
+print("Estimated Coefficients :")
+print("b0 = ",b0,"\nb1 = ",b1)
+# To plot the actual points as scatter plot
+plt.scatter(age, income, color = "b",marker = "o")
+# TO predict response vector
+response_Vec = b0 + b1*age
+# To plot the regression line
+plt.plot(age, response_Vec, color = "r")
+# Placing labels
+plt.xlabel('Age')
+plt.ylabel('Income')
+# To display plot
+plt.show()
+
+
+NAIVE BAYES:
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score
+
+msglbl_data = pd.read_csv('Statements_data.csv', names=['Message', 'Label'])
+print("The Total instances in the Dataset: ", msglbl_data.shape[0])
+msglbl_data['labelnum'] = msglbl_data.Label.map({'pos': 1, 'neg': 0})
+# place the data in X and Y Vectors
+X = msglbl_data["Message"]
+Y = msglbl_data.labelnum
+# to split the data into train se and test set
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y)
+
+count_vect = CountVectorizer()
+Xtrain_dims = count_vect.fit_transform(Xtrain)
+Xtest_dims = count_vect.transform(Xtest)
+df = pd.DataFrame(Xtrain_dims.toarray(),columns=count_vect.get_feature_names_out())
+clf = MultinomialNB()
+# to fit the train data into model
+clf.fit(Xtrain_dims, Ytrain)
+# to predict the test data
+prediction = clf.predict(Xtest_dims)
+print('******** Accuracy Metrics *********')
+print('Accuracy : ', accuracy_score(Ytest, prediction)) 
+print('Recall : ', recall_score(Ytest, prediction)) 
+print('Precision : ',precision_score(Ytest, prediction))
+print('Confusion Matrix : \n', confusion_matrix(Ytest, prediction))
+print(10*"-")
+# to predict the input statement
+test_stmt = [input("Enter any statement to predict :")]
+test_dims = count_vect.transform(test_stmt)
+pred = clf.predict(test_dims)
+for stmt,lbl in zip(test_stmt,pred):
+	if lbl == 1:
+		print("Statement is Positive")
+	else:
+		print("Statement is Negative")
+
+
+BACK PROPOGATION
+# Import required libraries
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+# Step 1: Define finite word dataset
+words = ["good", "excellent", "happy", "nice",
+         "bad", "terrible", "sad", "poor"]
+
+labels = ["positive", "positive", "positive", "positive",
+          "negative", "negative", "negative", "negative"]
+
+# Step 2: Convert words to numeric features
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(words)
+y = labels
+
+# Step 3: Split dataset into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+
+# Step 4: Create Neural Network using Backpropagation
+model = MLPClassifier(hidden_layer_sizes=(5),
+                      max_iter=1000,
+                      learning_rate_init=0.01)
+
+# Step 5: Train the model
+model.fit(X_train, y_train)
+
+# Step 6: Predict on test data
+predictions = model.predict(X_test)
+
+# Step 7: Evaluate performance
+print("Accuracy:", accuracy_score(y_test, predictions))
+
+# Step 8: Predict custom word
+test_word = [input("Enter a word to classify: ")]
+test_vector = vectorizer.transform(test_word)
+prediction = model.predict(test_vector)
+
+print("The word is classified as:", prediction[0])
+
+
+

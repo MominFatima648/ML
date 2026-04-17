@@ -15,3 +15,31 @@ INSERT INTO students (id, name, age) VALUES
 ('s524', 'Henny', 26);
 
 SELECT * FROM students;
+
+
+
+-------
+import mysql.connector
+# Connect to the MySQL Database
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="DevSQL@2025!",  # replace with your MySQL root password
+    database="SampleDB"
+)
+
+# Create a cursor to interact with the database
+cursor = conn.cursor()
+
+# Execute a SELECT query
+cursor.execute("SELECT * FROM students")
+
+# Fetch all rows
+rows = cursor.fetchall()
+
+print("Student Records:")
+for row in rows:
+    print(row)
+
+cursor.close()
+conn.close()
